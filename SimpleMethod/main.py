@@ -1,4 +1,5 @@
 from pythainlp.tokenize import word_tokenize
+from pythainlp.sentiment import sentiment
 import csv
 import re
 
@@ -27,11 +28,24 @@ def readDataset(filePath):
 def trainSimpleModel():
     hit = 0
     for x in dataset:
+        opinion.append(sentiment(x))
+        match = 0
         for word in word_tokenize(x, engine='newmm'):
             if word in foodDict:
+                foodName.append(word)
                 hit += 1
+                match = 1
                 break
+        if match == 0:
+            foodName.append("None")
     return hit
+
+def writeOutput():
+    f = open("output.txt", "w+", encoding="utf-8")
+    for x in range(0,len(dataset)):
+        line = dataset[x] + ',' + foodName[x] + ',' + opinion[x] +'\n'
+        f.write(line)
+    f.close()
 
 # Main code goes here
 
@@ -43,10 +57,14 @@ dictionaryPath = "../Dataset/Dictionary.csv"
 
 foodDict = readDictionary(dictionaryPath)
 dataset, row = readDataset(datasetPath)
+foodName = []
+opinion = []
 
 print('Load {} rows successfully'.format(row))
 
 hit = trainSimpleModel()
+
+writeOutput()
 
 print('Hit: ' + str(hit))
 print('Miss: ' + str(row-hit))
