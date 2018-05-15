@@ -2,7 +2,7 @@ from pythainlp.tokenize import word_tokenize
 from pythainlp.sentiment import sentiment
 import csv
 import re
-from function import NGramModel
+from function import NGramModel, searchFood
 
 # Functions go here
 
@@ -26,21 +26,6 @@ def readDataset(filePath):
             i += 1
     return csvFile, i              
 
-def trainSimpleModel():
-    hit = 0
-    for x in dataset:
-        opinion.append(sentiment(x))
-        match = 0
-        for word in word_tokenize(x, engine='newmm'):
-            if word in foodDict:
-                foodName.append(word)
-                hit += 1
-                match = 1
-                break
-        if match == 0:
-            foodName.append("None")
-    return hit
-
 def writeOutput():
     f = open("output.txt", "w+", encoding="utf-8")
     for x in range(0,len(dataset)):
@@ -63,10 +48,28 @@ opinion = []
 
 print('Load {} rows successfully'.format(row))
 
-#hit = trainSimpleModel()
-hit = NGramModel(dataset, foodDict)
+# Search food name in food dictionary
+print('\n Simple Model, search food name in food dictionary word by word\n')
+simple_hit = 0
+for sentence in dataset:
+    (match, name) = searchFood(sentence, foodDict)
+    simple_hit += match
+
+print('Hit: ' + str(simple_hit))
+print('Miss: ' + str(row-simple_hit))
+print('Accuracy: {0:.2f}%'.format(simple_hit/row*100))
+print('===========================================================\n')
+
+
+# Apply N-Gram to simple model
+print('Simple Model with n-gram (2 grams to 6 grams)\n')
+ngram_hit = 0
+ngram_hit, foodName = NGramModel(dataset, foodDict)
+print('Hit: ' + str(ngram_hit))
+print('Miss: ' + str(row-ngram_hit))
+print('Accuracy: {0:.2f}%'.format(ngram_hit/row*100))
+
+
 #writeOutput()
 
-print('Hit: ' + str(hit))
-print('Miss: ' + str(row-hit))
-print('Accuracy: {0:.2f}%'.format(hit/row*100))
+

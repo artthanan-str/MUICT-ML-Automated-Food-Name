@@ -31,7 +31,7 @@ def NGramModel(dataset, foodDict):
         hit += match
         foodName.append(name)
 
-    return hit
+    return hit, foodName
 
 
 def searchFood(sentence, foodDict):
@@ -44,3 +44,11 @@ def searchFood(sentence, foodDict):
             break
 
     return hit, name
+
+
+def writeOutput(dataset, foodName, opinion):
+    f = open("output.txt", "w+", encoding="utf-8")
+    for x in range(0,len(dataset)):
+        line = dataset[x] + ',' + foodName[x] + ',' + opinion[x] +'\n'
+        f.write(line)
+    f.close()
