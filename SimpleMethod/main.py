@@ -2,6 +2,7 @@ from pythainlp.tokenize import word_tokenize
 from pythainlp.sentiment import sentiment
 import csv
 import re
+from function import NGramModel
 
 # Functions go here
 
@@ -62,9 +63,9 @@ opinion = []
 
 print('Load {} rows successfully'.format(row))
 
-hit = trainSimpleModel()
-
-writeOutput()
+#hit = trainSimpleModel()
+hit = NGramModel(dataset, foodDict)
+#writeOutput()
 
 print('Hit: ' + str(hit))
 print('Miss: ' + str(row-hit))
