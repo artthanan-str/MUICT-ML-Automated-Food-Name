@@ -3,6 +3,7 @@ from pythainlp.sentiment import sentiment
 import csv
 import re
 from function import NGramModel, searchFood
+from pythainlp.rank import rank
 
 # Functions go here
 
@@ -73,3 +74,4 @@ print('Accuracy: {0:.2f}%'.format(ngram_hit/row*100))
 #writeOutput()
 
 
+print(rank(foodName))
