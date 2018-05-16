@@ -2,7 +2,7 @@ from pythainlp.tokenize import word_tokenize
 from pythainlp.sentiment import sentiment
 import csv
 import re
-from function import NGramModel, searchFood
+from function import NGramModel, searchFood, pythaiSentiment
 from pythainlp.rank import rank
 
 # Functions go here
@@ -73,5 +73,11 @@ print('Accuracy: {0:.2f}%'.format(ngram_hit/row*100))
 
 #writeOutput()
 
+#print(rank(foodName))
 
-print(rank(foodName))
+# Sentiment Analysis (Model from PyThaiNLP)
+sentiment_txt = "อาหารอร่อยมากเลย"
+result = pythaiSentiment(sentiment_txt)
+print('===========================================================\n')
+print('Sentiment Analysis (Model from PyThaiNLP)\n')
+print('Sentiment Result: ' + result)

@@ -1,5 +1,16 @@
 from pythainlp.util import *
 from pythainlp.tokenize import word_tokenize
+from pythainlp.sentiment import sentiment
+from pythainlp.corpus import stopwords
+import string
+
+def pythaiSentiment(sentence):
+    stopword = stopwords.words('thai')
+    for word in stopword:
+        if word in sentence:
+            sentence = sentence.replace(word, "") # Remove stopword
+    result = sentiment(sentence)
+    return result
 
 def NGramModel(dataset, foodDict):
     hit = 0
