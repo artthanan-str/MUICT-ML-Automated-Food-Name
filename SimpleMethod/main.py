@@ -2,8 +2,9 @@ from pythainlp.tokenize import word_tokenize
 from pythainlp.sentiment import sentiment
 import csv
 import re
-from function import NGramModel, searchFood, pythaiSentiment
+from function import NGramModel, searchFood, pythaiSentiment, writeOutput
 from pythainlp.rank import rank
+from collections import Counter
 
 # Functions go here
 
@@ -27,12 +28,6 @@ def readDataset(filePath):
             i += 1
     return csvFile, i              
 
-def writeOutput():
-    f = open("output.txt", "w+", encoding="utf-8")
-    for x in range(0,len(dataset)):
-        line = dataset[x] + ',' + foodName[x] + ',' + opinion[x] +'\n'
-        f.write(line)
-    f.close()
 
 # Main code goes here
 
@@ -65,19 +60,20 @@ print('===========================================================\n')
 # Apply N-Gram to simple model
 print('Simple Model with n-gram (2 grams to 6 grams)\n')
 ngram_hit = 0
-ngram_hit, foodName = NGramModel(dataset, foodDict)
+ngram_hit, foodName, opinion = NGramModel(dataset, foodDict)
 print('Hit: ' + str(ngram_hit))
 print('Miss: ' + str(row-ngram_hit))
 print('Accuracy: {0:.2f}%'.format(ngram_hit/row*100))
+print('Positive: ' + str(opinion.count("pos")))
+print('Negative: ' + str(opinion.count("neg")))
 
-
-#writeOutput()
+writeOutput(dataset, foodName, opinion)
 
 #print(rank(foodName))
 
 # Sentiment Analysis (Model from PyThaiNLP)
-sentiment_txt = "อาหารอร่อยมากเลย"
-result = pythaiSentiment(sentiment_txt)
-print('===========================================================\n')
-print('Sentiment Analysis (Model from PyThaiNLP)\n')
-print('Sentiment Result: ' + result)
+#sentiment_txt = "อาหารอร่อยมากเลย"
+#result = pythaiSentiment(sentiment_txt)
+#print('===========================================================\n')
+#print('Sentiment Analysis (Model from PyThaiNLP)\n')
+#print('Sentiment Result: ' + result)
