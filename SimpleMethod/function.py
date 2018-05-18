@@ -54,9 +54,11 @@ def pythaiSentiment(sentence):
 def NGramModel(dataset, foodDict):
     hit = 0
     foodName = []
+    opinion = []
 
     for sentence in dataset:
         match = 0
+        opinion.append(pythaiSentiment(sentence))
         (match, name) = searchFood(sentence, foodDict) # search all words in food dictionary
         #print(str(match) + ': ' + name)
         if(match == 0):
@@ -81,7 +83,7 @@ def NGramModel(dataset, foodDict):
         hit += match
         foodName.append(name)
 
-    return hit, foodName
+    return hit, foodName, opinion
 
 
 def searchFood(sentence, foodDict):
@@ -97,7 +99,7 @@ def searchFood(sentence, foodDict):
 
 
 def writeOutput(dataset, foodName, opinion):
-    f = open("output.txt", "w+", encoding="utf-8")
+    f = open("output.csv", "w+", encoding="utf-8")
     for x in range(0,len(dataset)):
         line = dataset[x] + ',' + foodName[x] + ',' + opinion[x] +'\n'
         f.write(line)
