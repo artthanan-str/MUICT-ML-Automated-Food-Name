@@ -1,6 +1,6 @@
 import csv
 import re
-from function import NGramModel, searchFood, pythaiSentiment, sentimentTrainModel, predictLabel, writeOutput
+from function import NGramModel, searchFood, pythaiSentiment, trainCustomSentiment, predict, writeOutput
 from pythainlp.rank import rank
 from collections import Counter
 
@@ -82,12 +82,12 @@ print('Sentiment Result: ' + result)
 
 sentence = 'อาหารอร่อยมากเลย'
 
-classifier, vocabulary = sentimentTrainModel() # run this code after editting pos or neg dictionary
-print('Finished training model\n\n')
+#classifier, vocabulary = trainCustomSentiment() # run this code after editting pos or neg dictionary
+print('Finished training model\n')
 
-result = predictLabel(sentence, vocabulary)
+result = predict(sentence)
+print('Sentiment Result: ' + result)
 
-print(vocabulary)
 
 #print('Input sentence: ' + sentence)
 #print('Result from classifying: ' + result)

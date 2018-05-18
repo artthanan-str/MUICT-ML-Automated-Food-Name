@@ -9,18 +9,27 @@ from itertools import chain
 import time
 import pickle
 
-def predictLabel(sentence, vocabulary):
+def predict(sentence):
 
     # load classifier
     f = open('../sentiment/classifier.pickle', 'rb')
     classifier = pickle.load(f)
     f.close()
 
+    vocabFile = open('../sentiment/vocabulary.pickle', 'rb')
+    vocabulary = pickle.load(vocabFile)
+    f.close()
+
+    stopword = stopwords.words('thai')
+    for word in stopword:
+        if word in sentence:
+            sentence = sentence.replace(word, "") # Remove stopword
+
     featurized_test_sentence =  {i:(i in word_tokenize(sentence)) for i in vocabulary}
     result = classifier.classify(featurized_test_sentence)
     return result
 
-def sentimentTrainModel():
+def trainCustomSentiment():
     startTime = time.time()
     # pos.txt
     with codecs.open('../sentiment/data/pos.txt', 'r', "utf-8") as f:
@@ -53,6 +62,10 @@ def sentimentTrainModel():
     f = open('../sentiment/classifier.pickle', 'wb')
     pickle.dump(classifier, f)
     f.close()
+
+    vocabFile = open('../sentiment/vocabulary.pickle', 'wb')
+    pickle.dump(vocabulary, vocabFile)
+    vocabFile.close()
 
     return classifier, vocabulary
 
