@@ -7,8 +7,15 @@ from nltk import NaiveBayesClassifier as nbc
 import codecs
 from itertools import chain
 import time
+import pickle
 
-def predictLabel(sentence, classifier, vocabulary):
+def predictLabel(sentence, vocabulary):
+
+    # load classifier
+    f = open('../sentiment/classifier.pickle', 'rb')
+    classifier = pickle.load(f)
+    f.close()
+
     featurized_test_sentence =  {i:(i in word_tokenize(sentence)) for i in vocabulary}
     result = classifier.classify(featurized_test_sentence)
     return result
@@ -16,14 +23,14 @@ def predictLabel(sentence, classifier, vocabulary):
 def sentimentTrainModel():
     startTime = time.time()
     # pos.txt
-    with codecs.open('../sentiment-data/pos.txt', 'r', "utf-8") as f:
+    with codecs.open('../sentiment/data/pos.txt', 'r', "utf-8") as f:
         lines = f.readlines()
         listpos = [e.strip() for e in lines]
         del lines # Release memory
     f.close()
     
     # neg.txt
-    with codecs.open('../sentiment-data/neg.txt', 'r', "utf-8") as f:
+    with codecs.open('../sentiment/data/neg.txt', 'r', "utf-8") as f:
         lines = f.readlines()
         listneg = [e.strip() for e in lines]
         del lines  # Release memory
@@ -40,7 +47,13 @@ def sentimentTrainModel():
 
     endTime = time.time()
 
-    print('Total time used to train model: ' + str(endTime-startTime))
+    print('Total time used to train model: ' + str(endTime-startTime) + ' mins\n')
+
+    # save classifier
+    f = open('../sentiment/classifier.pickle', 'wb')
+    pickle.dump(classifier, f)
+    f.close()
+
     return classifier, vocabulary
 
 def pythaiSentiment(sentence):

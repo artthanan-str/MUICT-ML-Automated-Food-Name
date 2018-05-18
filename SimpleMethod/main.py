@@ -82,13 +82,15 @@ print('Sentiment Result: ' + result)
 
 sentence = 'อาหารอร่อยมากเลย'
 
-classifier, vocabulary = sentimentTrainModel()
+classifier, vocabulary = sentimentTrainModel() # run this code after editting pos or neg dictionary
 print('Finished training model\n\n')
 
-result = predictLabel(sentence, classifier, vocabulary)
-#print(classifier)
-# print('Input sentence: ' + sentence)
-# print('Result from classifying: ' + result)
+result = predictLabel(sentence, vocabulary)
+
+print(vocabulary)
+
+#print('Input sentence: ' + sentence)
+#print('Result from classifying: ' + result)
 
 #sentiment_txt = "อาหารอร่อยมากเลย"
 #result = pythaiSentiment(sentiment_txt)
