@@ -1,8 +1,6 @@
-from pythainlp.tokenize import word_tokenize
-from pythainlp.sentiment import sentiment
 import csv
 import re
-from function import NGramModel, searchFood, pythaiSentiment
+from function import NGramModel, searchFood, pythaiSentiment, sentimentTrainModel, predictLabel
 from pythainlp.rank import rank
 
 # Functions go here
@@ -37,8 +35,8 @@ def writeOutput():
 # Main code goes here
 
 # immutable variables 
-datasetPath = "../Dataset/Raw_Data.csv"
-dictionaryPath = "../Dataset/Dictionary.csv"
+datasetPath = "../dataset/Raw_Data.csv"
+dictionaryPath = "../dataset/Dictionary.csv"
 
 # mutable variables
 
@@ -81,3 +79,18 @@ result = pythaiSentiment(sentiment_txt)
 print('===========================================================\n')
 print('Sentiment Analysis (Model from PyThaiNLP)\n')
 print('Sentiment Result: ' + result)
+
+
+
+# Our own sentiment model
+
+sentence = 'อาหารอร่อยมากเลย'
+
+classifier, vocabulary = sentimentTrainModel()
+print('Finished training model\n\n')
+
+result = predictLabel(sentence, classifier, vocabulary)
+#print(classifier)
+# print('Input sentence: ' + sentence)
+# print('Result from classifying: ' + result)
+
