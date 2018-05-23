@@ -80,12 +80,13 @@ def pythaiSentiment(sentence):
 def NGramModel(dataset, foodDict):
     hit = 0
     foodName = []
-    opinion = []
+    opinion_pythai = []
+    opinion_custom = []
 
     for sentence in dataset:
         match = 0
-        #opinion.append(pythaiSentiment(sentence))
-        opinion.append(predict(sentence))
+        opinion_pythai.append(pythaiSentiment(sentence))
+        opinion_custom.append(predict(sentence))
         (match, name) = searchFood(sentence, foodDict) # search all words in food dictionary
         #print(str(match) + ': ' + name)
         if(match == 0):
@@ -110,7 +111,7 @@ def NGramModel(dataset, foodDict):
         hit += match
         foodName.append(name)
 
-    return hit, foodName, opinion
+    return hit, foodName, opinion_pythai, opinion_custom
 
 
 def searchFood(sentence, foodDict):
@@ -131,3 +132,19 @@ def writeOutput(dataset, foodName, opinion, filename):
         line = dataset[x] + ',' + foodName[x] + ',' + opinion[x] +'\n'
         f.write(line)
     f.close()
+
+def evaluateSentiment(label, predicted):
+    tp = 0
+    tn = 0
+    fp = 0
+    fn = 0
+    for x in range(0, len(label)):
+        if label[x] == 'pos' and predicted[x] == 'pos':
+            tp+=1
+        elif label[x] == 'neg' and predicted[x] == 'neg':
+            tn+=1
+        elif label[x] == 'neg' and predicted[x] == 'pos':
+            fp+=1
+        else:
+            fn+=1
+    return tp, tn, fp, fn

@@ -1,6 +1,6 @@
 import csv
 import re
-from function import NGramModel, searchFood, pythaiSentiment, trainCustomSentiment, predict, writeOutput
+from function import NGramModel, searchFood, pythaiSentiment, trainCustomSentiment, predict, writeOutput, evaluateSentiment
 from pythainlp.rank import rank
 from collections import Counter
 
@@ -16,15 +16,16 @@ def readDictionary(filePath):
     return csvFile
 
 def readDataset(filePath):
-    csvFile = []
+    data, label = [], []
     i = 0
     with open(filePath, encoding='utf-8') as f:
         reader = csv.reader(f)
         for row in reader:
             #print(''.join(row))
-            csvFile.append(''.join(row))
+            data.append(row[0])
+            label.append(row[2])
             i += 1
-    return csvFile, i              
+    return data, label, i              
 
 
 # Main code goes here
@@ -36,9 +37,10 @@ dictionaryPath = "../dataset/Dictionary.csv"
 # mutable variables
 
 foodDict = readDictionary(dictionaryPath)
-dataset, row = readDataset(datasetPath)
+dataset, label, row = readDataset(datasetPath)
 foodName = []
-opinion = []
+opinion1 = []
+opinion2 = []
 
 print('Load {} rows successfully'.format(row))
 
@@ -58,14 +60,35 @@ print('===========================================================\n')
 # Apply N-Gram to simple model
 print('Simple Model with n-gram (2 grams to 6 grams)\n')
 ngram_hit = 0
-ngram_hit, foodName, opinion = NGramModel(dataset, foodDict)
+ngram_hit, foodName, opinion1, opinion2 = NGramModel(dataset, foodDict)
+
+tp1, tn1, fp1, fn1 = evaluateSentiment(label, opinion1)
+tp2, tn2, fp2, fn2 = evaluateSentiment(label, opinion2)
+accuracy1 = (tp1+tn1)/row
+accuracy2 = (tp2+tn2)/row
+
 print('Hit: ' + str(ngram_hit))
 print('Miss: ' + str(row-ngram_hit))
 print('Accuracy: {0:.2f}%'.format(ngram_hit/row*100))
-print('Positive: ' + str(opinion.count("pos")))
-print('Negative: ' + str(opinion.count("neg")))
+print('PyThai Sentiment Result')
+print('Positive: ' + str(tp1+fp1))
+print('Negative: ' + str(tn1+fn1))
+print('Accuracy: ' + str(accuracy1))
+print('True Positive: ' + str(tp1))
+print('True Negative: ' + str(tn1))
+print('False Positive: ' + str(fp1))
+print('False Negative: ' + str(fn1))
+print('\nCustom Sentiment Result')
+print('Positive: ' + str(tp2+fp2))
+print('Negative: ' + str(tn2+fn2))
+print('Accuracy: ' + str(accuracy2))
+print('True Positive: ' + str(tp2))
+print('True Negative: ' + str(tn2))
+print('False Positive: ' + str(fp2))
+print('False Negative: ' + str(fn2))
 
-writeOutput(dataset, foodName, opinion, "output1.csv")
+writeOutput(dataset, foodName, opinion1, "output1.csv")
+writeOutput(dataset, foodName, opinion1, "output2.csv")
 
 #print(rank(foodName))
 
@@ -75,25 +98,3 @@ result = pythaiSentiment(sentiment_txt)
 print('===========================================================\n')
 print('Sentiment Analysis (Model from PyThaiNLP)\n')
 print('Sentiment Result: ' + result)
-
-
-
-# Our own sentiment model
-
-sentence = 'อาหารอร่อยมากเลย'
-
-#classifier, vocabulary = trainCustomSentiment() # run this code after editting pos or neg dictionary
-print('Finished training model\n')
-
-result = predict(sentence)
-print('Sentiment Result: ' + result)
-
-
-#print('Input sentence: ' + sentence)
-#print('Result from classifying: ' + result)
-
-#sentiment_txt = "อาหารอร่อยมากเลย"
-#result = pythaiSentiment(sentiment_txt)
-#print('===========================================================\n')
-#print('Sentiment Analysis (Model from PyThaiNLP)\n')
-#print('Sentiment Result: ' + result)
