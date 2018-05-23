@@ -65,7 +65,7 @@ print('Accuracy: {0:.2f}%'.format(ngram_hit/row*100))
 print('Positive: ' + str(opinion.count("pos")))
 print('Negative: ' + str(opinion.count("neg")))
 
-writeOutput(dataset, foodName, opinion)
+writeOutput(dataset, foodName, opinion, "output1.csv")
 
 #print(rank(foodName))
 
