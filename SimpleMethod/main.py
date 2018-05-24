@@ -32,7 +32,7 @@ def readDataset(filePath):
 # Main code goes here
 
 # immutable variables 
-datasetPath = "../dataset/Raw_Data.csv"
+datasetPath = "../dataset/Raw_Data_ReadyToUse.csv"
 dictionaryPath = "../dataset/Dictionary.csv"
 
 # mutable variables
