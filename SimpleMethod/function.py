@@ -56,7 +56,7 @@ def trainCustomSentiment():
 
     endTime = time.time()
 
-    print('Total time used to train model: ' + str(endTime-startTime) + ' mins\n')
+    print('Total time used to train model: ' + str(endTime-startTime) + ' seconds\n')
 
     # save classifier
     f = open('../sentiment/classifier.pickle', 'wb')
